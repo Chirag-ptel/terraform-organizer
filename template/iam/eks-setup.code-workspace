@@ -1,0 +1,29 @@
+{
+	"folders": [
+		{
+			"path": "../../../../../Desktop/EKS/eks-setup"
+		},
+		{
+			"path": "../../../githubapp project/githubapp-repo/infra"
+		},
+		{
+			"path": "../../../sample-springboot"
+		},
+		{
+			"path": "../../../Spring-boot repo"
+		},
+		{
+			"path": "../../../argocd/argocd"
+		},
+		{
+			"path": "../../../spring-boot-eks"
+		},
+		{
+			"path": "../../../Jenkins ECS "
+		},
+		{
+			"path": "../.."
+		}
+	],
+	"settings": {}
+}
