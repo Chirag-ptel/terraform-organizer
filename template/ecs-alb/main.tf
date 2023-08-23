@@ -91,7 +91,6 @@ resource  "aws_lb_target_group" "alb_target_group" {
   vpc_id             = module.lib.vpc_id
  
 
-
   health_check {
     healthy_threshold   = 2
     interval            = 30
