@@ -57,13 +57,11 @@ data "terraform_remote_state" "vpc" {
 # }
 
 data "aws_security_group" "ecs_sg_data" {
-  count = (var.isSG) ? 0 : 1
   name = "${var.name}-ecs-service-sg"
   vpc_id = data.terraform_remote_state.vpc.outputs.vpc_id
 }
 
 data "aws_security_group" "alb_sg_data" {
-  count = (var.isSG) ? 0 : 1
   name = "${var.name}-alb-sg"
   vpc_id = data.terraform_remote_state.vpc.outputs.vpc_id
 }
