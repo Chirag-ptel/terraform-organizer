@@ -12,8 +12,7 @@ terraform {
 }
 
 module "lib" {
-  source = "../lib/"
-  name   = var.name
+  source = "../vpc-lib/"
 }
 
 resource "aws_security_group" "service_security_group" {
