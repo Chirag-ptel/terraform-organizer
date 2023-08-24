@@ -93,9 +93,9 @@ resource  "aws_lb_target_group" "alb_target_group" {
 
   health_check {
     healthy_threshold   = 2
-    interval            = 30
+    interval            = 60
     protocol            = "HTTP"
-    timeout             = 5
+    timeout             = 60
     unhealthy_threshold = 2
     path                = "/students"
   }
