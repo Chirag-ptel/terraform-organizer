@@ -95,7 +95,7 @@ resource  "aws_lb_target_group" "alb_target_group" {
     healthy_threshold   = 2
     interval            = 60
     protocol            = "HTTP"
-    timeout             = 60
+    timeout             = 55
     unhealthy_threshold = 2
     path                = "/students"
   }
