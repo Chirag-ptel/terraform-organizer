@@ -19,7 +19,7 @@ module "lib" {
 resource "aws_ecs_cluster""ecs-cluster" {
   name = "${var.name}-ecs-cluster"
 
-  depends_on = ["null_resource.build_and_push"]
+  depends_on = [null_resource.build_and_push]
 }
 
 resource "aws_ecs_task_definition" "ecs-task-definition" {
@@ -52,7 +52,7 @@ resource "aws_ecs_task_definition" "ecs-task-definition" {
   execution_role_arn       = module.lib.iam_role_arn
   task_role_arn            = module.lib.iam_role_arn
 
-  depends_on = ["null_resource.build_and_push"]
+  depends_on = [null_resource.build_and_push]
 }
 
 resource "aws_ecs_service" "ecs-service" {
@@ -73,7 +73,7 @@ resource "aws_ecs_service" "ecs-service" {
     container_name = aws_ecs_task_definition.ecs-task-definition.family
     container_port = 8080
   }
-  depends_on = ["null_resource.build_and_push"]
+  depends_on = [null_resource.build_and_push]
 }
 
 resource "aws_lb" "alb" {
@@ -86,7 +86,7 @@ resource "aws_lb" "alb" {
   tags = {
     Name = "var.name"
   }
-  depends_on = ["null_resource.build_and_push"]
+  depends_on = [null_resource.build_and_push]
 }
 
 resource  "aws_lb_target_group" "alb_target_group" {
@@ -105,7 +105,7 @@ resource  "aws_lb_target_group" "alb_target_group" {
     unhealthy_threshold = 2
     path                = "/students"
   }
-  depends_on = ["null_resource.build_and_push"]
+  depends_on = [null_resource.build_and_push]
 }
 
 resource "aws_lb_listener" "alb_listener_8080" {
@@ -122,7 +122,7 @@ resource "aws_lb_listener" "alb_listener_8080" {
     # }
     target_group_arn = aws_lb_target_group.alb_target_group.arn
   }
-  depends_on = ["null_resource.build_and_push"]
+  depends_on = [null_resource.build_and_push]
 }
 
 #########################
@@ -145,7 +145,7 @@ resource "null_resource" "build_and_push" {
   provisioner "local-exec" {
     command = "bin/deploy-docker.sh ${var.name} ${aws_ecr_repository.ecr_repo.repository_url}:latest ${var.region}"
   }
-  depends_on = ["aws_ecr_repository.ecr_repo"]
+  depends_on = [aws_ecr_repository.ecr_repo]
 }
 
 
