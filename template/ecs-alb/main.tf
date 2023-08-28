@@ -130,7 +130,7 @@ resource "aws_lb_listener" "alb_listener_8080" {
 #########################
 
 resource "aws_ecr_repository" "ecr_repo" {
-  name                 = "${var.name}-repo"
+  name                 = lower("${var.name}-repo")
   image_tag_mutability = "MUTABLE"
   force_delete         = true
 
