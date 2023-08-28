@@ -143,20 +143,9 @@ resource "aws_ecr_repository" "ecr_repo" {
 # Create docker image and push to ECR. Refer deploy script for more details
 resource "null_resource" "build_and_push" {
   provisioner "local-exec" {
-    command = "bin/deploy-docker.sh quest-app ${aws_ecr_repository.ecr_repo.repository_url}:$IMAGE_TAG ${var.region}"
+    command = "bin/deploy-docker.sh ${var.name} ${aws_ecr_repository.ecr_repo.repository_url}:latest ${var.region}"
   }
   depends_on = ["aws_ecr_repository.ecr_repo"]
 }
-
-cd iam
-terraform init
-cat terraform.tfvars
-terraform apply -auto-approve
-cd ../security-groups
-terraform init
-terraform apply -auto-approve
-cd ../ecs-alb
-terraform init
-terraform plan
 
 
