@@ -143,7 +143,7 @@ resource "aws_ecr_repository" "ecr_repo" {
 # Create docker image and push to ECR. Refer deploy script for more details
 resource "null_resource" "build_and_push" {
   provisioner "local-exec" {
-    command = "bin/deploy-docker.sh ${var.name} ${aws_ecr_repository.ecr_repo.repository_url}:latest ${var.region}"
+    command = "../deploy-docker.sh ${var.name} ${aws_ecr_repository.ecr_repo.repository_url}:latest ${var.region}"
   }
   depends_on = [aws_ecr_repository.ecr_repo]
 }
