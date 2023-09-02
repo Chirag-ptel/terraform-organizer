@@ -148,4 +148,3 @@ resource "null_resource" "build_and_push" {
   depends_on = [aws_ecr_repository.ecr_repo]
 }
 
-
