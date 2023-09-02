@@ -25,13 +25,13 @@ aws ecr get-login-password $aws_extra_flags | docker login --username AWS --pass
 
 echo "Building $aws_ecr_repository_url_with_tag from Dockerfile"
 
-Build image
+#Build image
 docker build -t $image .
 
-tag image
+#tag image
 docker tag $image $aws_ecr_repository_url_with_tag
 
-Push image
+#Push image
 docker push $aws_ecr_repository_url_with_tag
 
 
