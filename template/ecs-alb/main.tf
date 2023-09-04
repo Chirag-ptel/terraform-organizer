@@ -12,7 +12,7 @@ terraform {
 }
 
 module "lib" {
-  source = "./lib/"
+  source = "../lib/"
   name = var.name
 }
 
@@ -143,6 +143,7 @@ resource "aws_ecr_repository" "ecr_repo" {
 # Create docker image and push to ECR. Refer deploy script for more details
 resource "null_resource" "build_and_push" {
   provisioner "local-exec" {
+    working_dir = "${path.module}/.."
     command = "./deploy-docker.sh ${aws_ecr_repository.ecr_repo.name} ${aws_ecr_repository.ecr_repo.repository_url}:latest ${var.region}"
   }
   depends_on = [aws_ecr_repository.ecr_repo]
