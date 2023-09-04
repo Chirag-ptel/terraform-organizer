@@ -12,7 +12,7 @@ terraform {
 }
 
 module "lib" {
-  source = "lib/"
+  source = "./lib/"
   name = var.name
 }
 
