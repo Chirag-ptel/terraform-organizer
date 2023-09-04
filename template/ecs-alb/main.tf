@@ -144,7 +144,7 @@ resource "aws_ecr_repository" "ecr_repo" {
 resource "null_resource" "build_and_push" {
   provisioner "local-exec" {
     working_dir = "${path.module}/../"
-    command = "${path.module}/deploy-docker.sh ${aws_ecr_repository.ecr_repo.name} ${aws_ecr_repository.ecr_repo.repository_url}:latest ${var.region}"
+    command = "${path.module}/../deploy-docker.sh ${aws_ecr_repository.ecr_repo.name} ${aws_ecr_repository.ecr_repo.repository_url}:latest ${var.region}"
   }
   depends_on = [aws_ecr_repository.ecr_repo]
 }
