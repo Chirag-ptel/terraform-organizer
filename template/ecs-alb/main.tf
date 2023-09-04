@@ -5,7 +5,7 @@ provider "aws" {
 terraform {
   backend "s3" {
     bucket = "bucket-tf-state-pipeline-resources"
-    key    = "ecs-alb/01/terraform.tfstate"
+    key    = "APP-NAME-HOLDER/ecs-alb/terraform.tfstate"
     dynamodb_table = "dynamodb-statelock-for-tfstate-bucket"
     region = "ap-south-1"
   }
@@ -143,7 +143,8 @@ resource "aws_ecr_repository" "ecr_repo" {
 # Create docker image and push to ECR. Refer deploy script for more details
 resource "null_resource" "build_and_push" {
   provisioner "local-exec" {
-    command = "../deploy-docker.sh ${aws_ecr_repository.ecr_repo.name} ${aws_ecr_repository.ecr_repo.repository_url}:latest ${var.region}"
+    working_dir = "../"
+    command = "deploy-docker.sh ${aws_ecr_repository.ecr_repo.name} ${aws_ecr_repository.ecr_repo.repository_url}:latest ${var.region}"
   }
   depends_on = [aws_ecr_repository.ecr_repo]
 }
