@@ -5,7 +5,7 @@ provider "aws" {
 terraform {
   backend "s3" {
     bucket = "bucket-tf-state-pipeline-resources"
-    key    = "iam/01/terraform.tfstate"
+    key    = "APP-NAME-HOLDER/iam/terraform.tfstate"
     dynamodb_table = "dynamodb-statelock-for-tfstate-bucket"
     region = "ap-south-1"
   }
