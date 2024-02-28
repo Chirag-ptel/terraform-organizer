@@ -1,1 +1,1 @@
-name = "sample-dev-vpc"
+name = "APP-NAME-HOLDER"

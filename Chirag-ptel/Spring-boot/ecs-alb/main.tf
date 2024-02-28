@@ -5,7 +5,7 @@ provider "aws" {
 terraform {
   backend "s3" {
     bucket = "bucket-tf-state-pipeline-resources"
-    key    = "APP-NAME-HOLDER/ecs-alb/terraform.tfstate"
+    key    = "ecs-alb/01/terraform.tfstate"
     dynamodb_table = "dynamodb-statelock-for-tfstate-bucket"
     region = "ap-south-1"
   }
@@ -18,8 +18,6 @@ module "lib" {
 
 resource "aws_ecs_cluster""ecs-cluster" {
   name = "${var.name}-ecs-cluster"
-
-  depends_on = [null_resource.build_and_push]
 }
 
 resource "aws_ecs_task_definition" "ecs-task-definition" {
@@ -29,7 +27,7 @@ resource "aws_ecs_task_definition" "ecs-task-definition" {
    memory = var.task_definition_memory
   container_definitions    = jsonencode([{
     name   = "${var.name}-task"
-    image  = "${aws_ecr_repository.ecr_repo.repository_url}"
+    image  = "494338272518.dkr.ecr.ap-south-1.amazonaws.com/springboot-8080:latest"
     cpu       = 256
     memory    = 512
     portMappings = [
@@ -51,8 +49,6 @@ resource "aws_ecs_task_definition" "ecs-task-definition" {
   network_mode             = "awsvpc"
   execution_role_arn       = module.lib.iam_role_arn
   task_role_arn            = module.lib.iam_role_arn
-
-  depends_on = [null_resource.build_and_push]
 }
 
 resource "aws_ecs_service" "ecs-service" {
@@ -73,7 +69,6 @@ resource "aws_ecs_service" "ecs-service" {
     container_name = aws_ecs_task_definition.ecs-task-definition.family
     container_port = 8080
   }
-  depends_on = [null_resource.build_and_push]
 }
 
 resource "aws_lb" "alb" {
@@ -86,7 +81,6 @@ resource "aws_lb" "alb" {
   tags = {
     Name = "var.name"
   }
-  depends_on = [null_resource.build_and_push]
 }
 
 resource  "aws_lb_target_group" "alb_target_group" {
@@ -99,13 +93,12 @@ resource  "aws_lb_target_group" "alb_target_group" {
 
   health_check {
     healthy_threshold   = 2
-    interval            = 60
+    interval            = 30
     protocol            = "HTTP"
-    timeout             = 55
+    timeout             = 5
     unhealthy_threshold = 2
     path                = "/students"
   }
-  depends_on = [null_resource.build_and_push]
 }
 
 resource "aws_lb_listener" "alb_listener_8080" {
@@ -122,30 +115,4 @@ resource "aws_lb_listener" "alb_listener_8080" {
     # }
     target_group_arn = aws_lb_target_group.alb_target_group.arn
   }
-  depends_on = [null_resource.build_and_push]
 }
-
-#########################
-######   ECR   ##########
-#########################
-
-resource "aws_ecr_repository" "ecr_repo" {
-  name                 = lower("${var.name}-repo")
-  image_tag_mutability = "MUTABLE"
-  force_delete         = true
-
-  image_scanning_configuration {
-    scan_on_push = true
-  }
-}
-
-
-# Create docker image and push to ECR. Refer deploy script for more details
-resource "null_resource" "build_and_push" {
-  provisioner "local-exec" {
-    working_dir = "${path.module}/.."
-    command = "./deploy-docker.sh ${aws_ecr_repository.ecr_repo.name} ${aws_ecr_repository.ecr_repo.repository_url}:latest ${var.region}"
-  }
-  depends_on = [aws_ecr_repository.ecr_repo]
-}
-
